@@ -27,10 +27,13 @@ public class DriverSettings {
             capabilities.setCapability("enableVNC", true);
             capabilities.setCapability("enableVideo", true);
             Configuration.remote = String.format(
-                    "https://%s:%s@%s", System.getProperty("login"),
-                    System.getProperty("password"),
-                    Project.config.remoteDriverUrl()
+                    "http://%s", Project.config.remoteDriverUrl()
             );
+//            Configuration.remote = String.format(
+//                    "https://%s:%s@%s", System.getProperty("login"),
+//                    System.getProperty("password"),
+//                    Project.config.remoteDriverUrl()
+//            );
         }
 
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
