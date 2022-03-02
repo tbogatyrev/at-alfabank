@@ -4,11 +4,11 @@
 
 ### Main Page tests
 
-:white_check_mark: Checking that there is a main block with slides on the page
-:white_check_mark: Checking that search results are displayed
-:white_check_mark: Checking that the 'Popular Products' block with the list of products is displayed
-:white_check_mark: Checking a block with a special offer
-:white_check_mark: Checking the dependence of the deposit rate on the term of the deposit
+:white_check_mark: Checking that there is a main block with slides on the page    
+:white_check_mark: Checking that search results are displayed    
+:white_check_mark: Checking that the 'Popular Products' block with the list of products is displayed    
+:white_check_mark: Checking a block with a special offer    
+:white_check_mark: Checking the dependence of the deposit rate on the term of the deposit    
 
 ## Technology Stack
 
@@ -17,6 +17,7 @@
 |                                                                                    IDEA                                                                                    |                                                                                Java                                                                                |                                                                                 Junit5                                                                                  |                                                                                 Gradle                                                                                  |                                                                                  Selenide                                                                                   | Selenoid                                                                                                                                                                    | Allure                                                                                                                                                                        | Jenkins                                                                                                                                                                   | Github                                                                                                                                                                  |
 
 ## Run tests
+
 ```bash
     clean
      ${TASK}
@@ -26,13 +27,15 @@
     -DbaseUrls=${ENVIRONMENT}
     -DremoteDriverUrl=${SELENOID_HUB}
 ```
-где:
->- [x] *Dbrowser - browser type (default chrome)*
+
+where:
+> - [x] *Dbrowser - browser type (default chrome)*
 >- [x] *DbrowserVersion - browser version(default 98.0)*
 > -[x] *DbrowserSize - browser size(default 1920x1080)*
 >- [x] *DremoteDriverUrl - remote url to run tests (default https://host.docker.internal:8080/wd/hub)*
 >- [x] *DbaseUrl - the main address of the test stand (default https://alfabank.ru/)*
-> 
+>
+
 ### - Video sample with passing test case
 
 ![Video](https://github.com/tbogatyrev/at-alfabank/blob/master/img/alfabank-test.gif?raw=true)
