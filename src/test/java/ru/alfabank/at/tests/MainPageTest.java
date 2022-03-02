@@ -1,14 +1,15 @@
 package ru.alfabank.at.tests;
 
 import io.qameta.allure.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import ru.alfabank.at.pages.CashLoanPage;
 import ru.alfabank.at.pages.MainPage;
 import ru.alfabank.at.pages.SearchResultsPage;
+import ru.alfabank.at.pages.TelegramPage;
 
 import java.util.List;
 
@@ -74,11 +75,9 @@ public class MainPageTest extends TestBase {
     @DisplayName("Проверка блока со специальным предложением")
     @Severity(SeverityLevel.CRITICAL)
     void checkSpecialPromotion() {
-        String header = "Кредит наличными \nпо сниженной ставке";
+        String header = "Важные новости\nв нашем Telegram";
         List<String> descriptionList = List.of(
-                "-\nОнлайн-решение за 2 минуты",
-                "-\nСумма до 7,5 млн ₽",
-                "-\nДоставка на бесплатной дебетовой карте"
+                "Подпишитесь, чтобы быть в курсе"
         );
         step("Блок со специальным предложением присутствует", () -> {
             mainPage.specialPromotionBlock().blockIsVisible();
@@ -90,12 +89,13 @@ public class MainPageTest extends TestBase {
             mainPage.specialPromotionBlock().descriptionIsVisible(descriptionList);
         });
         step("При нажатии кнопки 'Получить кредит' открылась страница 'Кредит наличными'", () -> {
-            CashLoanPage cashLoanPage = mainPage.specialPromotionBlock().clickReceiveCreditBtn();
-            cashLoanPage.checkTitle();
-            cashLoanPage.checkUrlPath();
+            TelegramPage telegramPage = mainPage.specialPromotionBlock().clickButton();
+            telegramPage.checkTitle();
+            telegramPage.checkUrlPath();
         });
     }
 
+    @Disabled
     @CsvSource(value = {
             "49999; Минимальная сумма кредита 50 000 ₽. Увеличьте сумму кредита или оформите кредитную карту 100 дней без %.",
             "50000; 7,5 %",
@@ -109,10 +109,10 @@ public class MainPageTest extends TestBase {
     @ParameterizedTest(name = "Проверка граничных значений процентной ставки {1} калькулятора в зависимости от суммы: {0}")
     @Tag("mainpage")
     @Stories({@Story("Проверка главной страницы")})
-    @Description("Блок с кредитным калькулятором")
+    @Description("Блок с калькулятором")
     @DisplayName("Проверка зависимости процентной ставки от суммы кредита наличными")
     @Severity(SeverityLevel.CRITICAL)
-    void checkInterestRate(String amount, String expectedPercent) {
+    void checkCreditInterestRate(String amount, String expectedPercent) {
         step("Блок с калькулятором присутствует", () -> {
             mainPage.calculatorBlock().blockIsVisible();
         });
@@ -120,10 +120,41 @@ public class MainPageTest extends TestBase {
             mainPage.calculatorBlock().selectTabCreditLoan("Расcчитать кредит наличными");
         });
         step("Выбран 'Срок кредита' 1 год", () -> {
-            mainPage.calculatorBlock().selectCreditTerm("1 год");
+            mainPage.calculatorBlock().selectTerm("1 год");
         });
         step("При изменении суммы кредита процентная ставка равна ожидаемому значению", () -> {
             mainPage.calculatorBlock().checkPercentByAmount(amount, expectedPercent);
+        });
+    }
+
+    @CsvSource(value = {
+            "3 месяца; 20,34 %",
+            "6 месяцев; 19,77 %",
+            "9 месяцев; 15,77 %",
+            "1 год; 10,47 %",
+            "1,5 года; 10,74 %",
+            "2 года; 11,02 %",
+            "3 года; 11,61 %"
+    }, delimiter = ';')
+    @ParameterizedTest(name = "Проверка процентной ставки по депозиту {1} калькулятора в зависимости от срока: {0}")
+    @Tag("mainpage")
+    @Stories({@Story("Проверка главной страницы")})
+    @Description("Блок с калькулятором")
+    @DisplayName("Проверка зависимости процентной ставки по депозиту от срока")
+    @Severity(SeverityLevel.CRITICAL)
+    void checkDepositInterestRate(String term, String expectedPercent) {
+        step("Блок с калькулятором присутствует", () -> {
+            mainPage.calculatorBlock().blockIsVisible();
+        });
+        step("Выбрана вкладка 'Рассчитать выгоду по вкладу'", () -> {
+            mainPage.calculatorBlock().selectTabCreditLoan("Рассчитать выгоду по вкладу");
+        });
+        step("Выбран срок вклада", () -> {
+            mainPage.calculatorBlock().selectTerm(term);
+        });
+        step("При изменении срока вклада процентная ставка равна ожидаемому значению", () -> {
+            String amount = "1000000";
+            mainPage.calculatorBlock().checkDepositPercent(amount, expectedPercent);
         });
     }
 }
